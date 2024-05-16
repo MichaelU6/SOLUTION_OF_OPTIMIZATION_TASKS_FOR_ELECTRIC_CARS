@@ -8,22 +8,25 @@ Zatiaľ som naštudoval problematiku, určil ciele, vytvoril prvú implementáci
 Venujem sa optimalizácii Ant Colony Optimization (ACO), kde využívam feromónovú maticu na výber ciest. Riešim správny výber ďalšieho bodu v ceste, berúc do úvahy obmedzenia ako kapacita vozidla a nabíjanie. Dôležité je tiež nájsť vhodné nastavenie parametrov ako "počet mravcov", alfa, beta, atď.
 
 # Kalendár Cieľov
-1. Úplné definovanie benchmarkov
+1. Začiatok práce
+   - Pochopiť dôležité apsekty diplomovej práce. Rozvrhnút si úlohy. Prvé kroky v implementácií. Získanie a študovanie literatúry.
+   - 16.5.2024
+2. Úplné definovanie benchmarkov
    - Popis a pochopenie vstupných dát
    - 31.7.2024
-2. Návrh a implementácia môjho použitia ACO
+3. Návrh a implementácia môjho použitia ACO
    - Zohľadnenie všetkých obmedzení
    - 30.9.2024
-3. Zobrazovanie výstupov do grafov a tabuliek
+4. Zobrazovanie výstupov do grafov a tabuliek
    - Vizualizácia problému
    - Možnosť porovnania
    - 30.9.2024
-4. Paralelizovať riešenie
+5. Paralelizovať riešenie
    - 30.10.2024
-5. Skvalitnenie kódu
+6. Skvalitnenie kódu
    - 31.12.2024
-6. Skúmanie mojich výsledkov
+7. Skúmanie mojich výsledkov
    - Porovnanie s už vytvorenými výsledkami
    - 20.2.2025
-7. Sumarizácia a dokončenie textu diplomovej práce
+8. Sumarizácia a dokončenie textu diplomovej práce
    - 31.3.2025
