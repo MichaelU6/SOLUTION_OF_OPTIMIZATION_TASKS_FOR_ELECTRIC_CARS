@@ -1,0 +1,41 @@
+\newcommand{\noopsort}[1]{} \newcommand{\printfirst}[2]{#1}
+  \newcommand{\singleletter}[1]{#1} \newcommand{\switchargs}[2]{#2#1}
+\begin{thebibliography}{1}
+
+\bibitem{bonilha2020ant}
+Ismael~Santana Bonilha, Michalis Mavrovouniotis, Fernando~Moreira Muller,
+  Georgios Ellinas, and Marios Polycarpou.
+\newblock Ant colony optimization with heuristic repair for the dynamic vehicle
+  routing problem.
+\newblock In {\em 2020 IEEE Symposium Series on Computational Intelligence,
+  SSCI 2020}, pages 313--320. IEEE, 2020.
+
+\bibitem{fazeli2023efficient}
+S.~S. Fazeli, S.~Venkatachalam, and J.~M. Smereka.
+\newblock Efficient algorithms for electric vehicles’ min-max routing
+  problem.
+\newblock {\em Sustainable Operations and Computers}, pages 0--20, 2023.
+
+\bibitem{lezama2019business}
+Francisco Lezama, Jo{\~a}o Soares, Ricardo Faia, Zita Vale, Lu{\'i}s~Henrique
+  Macedo, and Raquel Romero.
+\newblock Business models for flexibility of electric vehicles: Evolutionary
+  computation for a successful implementation.
+\newblock In {\em GECCO 2019 Companion - Proceedings of the 2019 Genetic and
+  Evolutionary Computation Conference Companion}, pages 1873--1878, 2020.
+
+\bibitem{mavrovouniotis2022solving}
+Michalis Mavrovouniotis, Chao Li, Georgios Ellinas, and Marios Polycarpou.
+\newblock Solving the electric capacitated vehicle routing problem with cargo
+  weight.
+\newblock In {\em 2022 IEEE Congress on Evolutionary Computation, CEC 2022 -
+  Conference Proceedings}, July 2022.
+
+\bibitem{mavrovouniotis2020benchmark}
+Michalis Mavrovouniotis, Christos Menelaou, Stelios Timotheou, Christos
+  Panayiotou, Georgios Ellinas, and Marios Polycarpou.
+\newblock Benchmark set for the ieee wcci-2020 competition on evolutionary
+  computation for the electric vehicle routing problem.
+\newblock {\em Kios Coe}, March 2020.
+
+\end{thebibliography}

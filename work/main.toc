@@ -1,0 +1,20 @@
+\babel@toc {slovak}{}
+\contentsline {chapter}{Predhovor}{vii}{chapter*.5}%
+\contentsline {section}{\numberline {0.1}Motivácia}{1}{section.0.1}%
+\contentsline {section}{\numberline {0.2}Cieľ práce}{1}{section.0.2}%
+\contentsline {section}{\numberline {0.3}Štruktúra práce}{1}{section.0.3}%
+\contentsline {section}{\numberline {0.4}Prínos práce}{2}{section.0.4}%
+\contentsline {chapter}{\numberline {1}Teoretické základy elektromobility a optimalizačných metód}{3}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Prehľad existujúcich prístupov k optimalizácii trás a dobíjania pre elektromobily}{5}{chapter.2}%
+\contentsline {chapter}{\numberline {3}Popis Ant Colony Optimization a ďalších potenciálnych heuristík}{7}{chapter.3}%
+\contentsline {subsection}{\numberline {3.0.1}Úvod}{7}{subsection.3.0.1}%
+\contentsline {subsection}{\numberline {3.0.2}Prispôsobenie sa dynamickým zmenám}{7}{subsection.3.0.2}%
+\contentsline {subsection}{\numberline {3.0.3}Formulácia problému dynamického trasovania vozidiel (DVRP)}{7}{subsection.3.0.3}%
+\contentsline {subsection}{\numberline {3.0.4}Generovanie dynamických testových prostredí}{8}{subsection.3.0.4}%
+\contentsline {chapter}{\numberline {4}Implementácia a experimenty, vrátane porovnania výsledkov rôznych metód}{9}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Načítanie benchmarkov}{9}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Heuristika generovania}{10}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Vyhodnotenie}{10}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Diskusia a závery, vrátane návrhov budúcich výskumných smerov}{11}{chapter.5}%
+\contentsline {chapter}{Záver}{13}{chapter*.11}%
+\contentsline {chapter}{Literatúra}{15}{chapter*.11}%

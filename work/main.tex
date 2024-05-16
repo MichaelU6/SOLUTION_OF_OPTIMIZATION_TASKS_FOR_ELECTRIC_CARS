@@ -1,0 +1,94 @@
+\documentclass[11pt, twoside]{book}
+%\documentclass[12pt, oneside]{book}  % jednostranna tlac
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=3.5cm,right=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage{natbib}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage[slovak]{babel} % vypnite pre prace v anglictine
+\linespread{1.25} % hodnota 1.25 by mala zodpovedat 1.5 riadkovaniu
+\usepackage{ae,aecompl,xfrac,url}
+
+\usepackage[colorinlistoftodos]{todonotes}
+
+\newcommand{\addref}[1]{
+	\todo[color=brown!40,size=\footnotesize,inline]		{\thesubsection{} REF: #1}
+}
+
+\newcommand{\addfig}[1]{
+	\todo[color=red!60,size=\footnotesize,inline]
+	{\thesubsection{} FIG: #1}
+}
+
+\newcommand{\adjust}[1]{
+	\todo[color=orange!60,size=\footnotesize ,inline]
+	{\thesubsection{} ADJ: #1}
+}
+
+\input{00_formal/titulka}
+\hspace{-2cm}
+\includegraphics[width=1.1\textwidth]{00_formal/zadanie}
+
+\frontmatter
+\input{00_formal/prehlasenie}
+\input{00_formal/podakovanie}
+\input{00_formal/abstrakty}
+\input{00_formal/predhovor}
+
+% -------------------
+% --- Zoznamy tabuliek, obrázkov - nepovinne
+% -------------------
+
+\tableofcontents
+\listoffigures
+\listoftables
+\listoftodos
+
+% ---  Koniec Zoznamov
+
+\mainmatter
+
+
+\input{00_formal/uvod}
+
+\input{01_prva/kapitola}
+
+\input{02_druha/druha}
+
+\input{03_prakticka/tretia}
+
+\input{05_stvrta/stvrta}
+
+\input{06_piata/piata}
+
+\input{00_formal/zaver}
+
+	
+\backmatter
+
+\thispagestyle{empty}
+\clearpage
+
+\addcontentsline{toc}{chapter}{Literatúra}
+\markboth{Literatúra}{Literatúra}
+\bibliographystyle{plain}
+\bibliography{00_formal/literatura} 
+
+% -------------------
+%--- Prilohy---
+% -------------------
+
+%Nepovinná časť prílohy obsahuje materiály, ktoré neboli zaradené priamo  do textu. Každá príloha sa začína na novej strane.
+%Zoznam príloh je súčasťou obsahu.
+
+
+\end{document}
+
+
+
+
+
+
