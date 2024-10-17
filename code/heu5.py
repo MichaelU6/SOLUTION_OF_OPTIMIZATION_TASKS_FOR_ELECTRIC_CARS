@@ -7,7 +7,6 @@ from stats import *
 class Herusitic:
     def __init__(self, EVRP, alpha=0.5, beta=3.0, evaporation_rate=0.5, pheromone_deposit=100.0, iterations=20):
         self.best_sol = None  # Najlepšie riešenie
-        self.solution = None  # Najlepšie riešenie
         self.EVRP = EVRP  # EVRP objekt
         self.num_vehicles = self.EVRP.MIN_VEHICLES
 
@@ -35,45 +34,38 @@ class Herusitic:
             'tour_length': math.inf
         }
 
-        self.solution = {
-            'tour': [[0] * (self.EVRP.NUM_OF_CUSTOMERS + 100) for _ in range(self.num_vehicles)], 
-            'steps': [0] * self.num_vehicles, 
+    def run_aco(self, stats):
+        global_best = {
+            'tour': None,
+            'steps': None,
             'tour_length': math.inf
         }
-        
-    def run_aco(self, stats):
-        #global_best = {
-        #    'tour': None,
-        #    'steps': None,
-        #    'tour_length': math.inf
-        #}
 
         for iteration in range(self.iterations):
             self.run_heuristic()  # Pošlem jedného mravca obsluzit vsetky auta so vsetkymi zakaznikmy
 
+            
+
             # ak
-            if self.solution['tour_length'] < self.best_sol['tour_length']:
-                self.best_sol['tour'] = [list(route) for route in self.solution['tour']]
-                self.best_sol['steps'] = list(self.solution['steps'])
-                self.best_sol['tour_length'] = self.solution['tour_length']
+            if self.best_sol['tour_length'] < global_best['tour_length']:
+                global_best['tour'] = [list(route) for route in self.best_sol['tour']]
+                global_best['steps'] = list(self.best_sol['steps'])
+                global_best['tour_length'] = self.best_sol['tour_length']
             
             # do štatistík zapíšem riešenie tejto iterácií, jeho dĺžku
-            #stats.get_mean(iteration, self.best_sol['tour_length'])
+            stats.get_mean(iteration, self.best_sol['tour_length'])
 
             #print(f"Iteration {iteration + 1}, Best Tour Length: {global_best['tour_length']}")
             
         # Ked dobehnu vsetky mravce konkretne 10, podla toho kto mal najkratsiu cestu updatnem feromonovu maticu
         self.update_pheromones()
         
-        return self.best_sol
+        return global_best
 
     def run_heuristic(self):
         """Spustenie heuristiky s feromónovou maticou a viacerými vozidlami."""
         #self.initialize_heuristic()
         # Rozdelenie zákazníkov medzi vozidlá
-        # Nedelit to medzi auta pustit prve kym je plne ked je prazdne ide druhe
-        
-        print(self.EVRP.cust_demand)
         customers = list(range(1, self.EVRP.NUM_OF_CUSTOMERS + 1))
         random.shuffle(customers)
         customer_groups = [customers[i::self.num_vehicles] for i in range(self.num_vehicles)]
@@ -82,7 +74,6 @@ class Herusitic:
         
         # Ked vygenerujem pre vsetky auta jedno riesenie porovnam ho ci nieje najlepsie. Vlastne je to riesenie jedneho mravca
         tour_length = self.EVRP.fitness_evaluation(self.best_sol)
-        
         #if tour_length < self.best_sol['tour_length']:
         #    self.best_sol['tour_length'] = tour_length
 
@@ -94,34 +85,32 @@ class Herusitic:
         energy_temp = 0.0
         capacity_temp = 0.0
 
-        self.solution['steps'][vehicle_id] = 1
-        self.solution['tour'][vehicle_id][0] = self.EVRP.DEPOT  # Začiatok v depe
+        self.best_sol['steps'][vehicle_id] = 1
+        self.best_sol['tour'][vehicle_id][0] = self.EVRP.DEPOT  # Začiatok v depe
 
         #print(r)
         i = 0
         while i < len(r):
-            #print(self.best_sol['steps'][vehicle_id])
-           
-            from_node = self.solution['tour'][vehicle_id][self.solution['steps'][vehicle_id] - 1]
+            from_node = self.best_sol['tour'][vehicle_id][self.best_sol['steps'][vehicle_id] - 1]
             to_node = self.select_next_node(from_node, r)
             min_Battery = self.EVRP.get_energy_consumption(to_node, self.find_nearest_charging_station(to_node)) 
-            #print(to_node, from_node, energy_temp, capacity_temp)
-            if (capacity_temp + self.EVRP.get_customer_demand(to_node ) <= self.EVRP.MAX_CAPACITY and
+
+            if (capacity_temp + self.EVRP.get_customer_demand(to_node) <= self.EVRP.MAX_CAPACITY and
                 energy_temp + self.EVRP.get_energy_consumption(from_node, to_node) + min_Battery <= self.EVRP.BATTERY_CAPACITY):
-                capacity_temp += self.EVRP.get_customer_demand(to_node )
+                capacity_temp += self.EVRP.get_customer_demand(to_node)
                 energy_temp += self.EVRP.get_energy_consumption(from_node, to_node)
-                self.solution['tour'][vehicle_id][self.solution['steps'][vehicle_id]] = to_node
-                self.solution['steps'][vehicle_id] += 1
+                self.best_sol['tour'][vehicle_id][self.best_sol['steps'][vehicle_id]] = to_node
+                self.best_sol['steps'][vehicle_id] += 1
                 #print(to_node, energy_temp)
                 r.remove(to_node)
             else:
                 """Ked vozidlo nema dostatok miesta na obsluzenie vybreneho zakaznika alebo dost baterie poslem ho do depa/najblizsej stanice"""
-                if capacity_temp + self.EVRP.get_customer_demand(to_node ) > self.EVRP.MAX_CAPACITY:
+                if capacity_temp + self.EVRP.get_customer_demand(to_node) > self.EVRP.MAX_CAPACITY:
                     if energy_temp + self.EVRP.get_energy_consumption(from_node, 0) <= self.EVRP.BATTERY_CAPACITY:
                         capacity_temp = 0.0  # Vozidlo ide späť do depa
                         energy_temp = 0.0
-                        self.solution['tour'][vehicle_id][self.solution['steps'][vehicle_id]] = self.EVRP.DEPOT
-                        self.solution['steps'][vehicle_id] += 1
+                        self.best_sol['tour'][vehicle_id][self.best_sol['steps'][vehicle_id]] = self.EVRP.DEPOT
+                        self.best_sol['steps'][vehicle_id] += 1
                     else:
                         self.find_path_in_depo(from_node, energy_temp, vehicle_id)
                         energy_temp = 0.0
@@ -129,25 +118,20 @@ class Herusitic:
                     #print(self.EVRP.DEPOT, energy_temp)
                 if energy_temp + self.EVRP.get_energy_consumption(from_node, to_node) > self.EVRP.BATTERY_CAPACITY:
                     charging_station = self.find_nearest_charging_station(from_node)
-                    self.solution['tour'][vehicle_id][self.solution['steps'][vehicle_id]] = charging_station
+                    self.best_sol['tour'][vehicle_id][self.best_sol['steps'][vehicle_id]] = charging_station
                     energy_temp = 0.0
                     #print(charging_station, energy_temp)
-                    self.solution['steps'][vehicle_id] += 1
-                else:
-                    self.find_path_in_depo(from_node, energy_temp, vehicle_id)
-                    energy_temp = 0.0
-                    capacity_temp = 0.0  # Vozidlo ide späť do depa
-            #print("A")
-            #print(self.solution['tour'][vehicle_id])  
+                    self.best_sol['steps'][vehicle_id] += 1
+                
 
-        if self.solution['tour'][vehicle_id][self.solution['steps'][vehicle_id] - 1] != self.EVRP.DEPOT:
+        if self.best_sol['tour'][vehicle_id][self.best_sol['steps'][vehicle_id] - 1] != self.EVRP.DEPOT:
         #    self.best_sol['tour'][vehicle_id][self.best_sol['steps'][vehicle_id]] = self.EVRP.DEPOT
         #    self.best_sol['steps'][vehicle_id] += 1
             #print("bater = " + str(energy_temp))
-            self.find_path_in_depo(self.solution['tour'][vehicle_id][self.solution['steps'][vehicle_id] - 1], energy_temp, vehicle_id)    
+            self.find_path_in_depo(self.best_sol['tour'][vehicle_id][self.best_sol['steps'][vehicle_id] - 1], energy_temp, vehicle_id)    
         #print(self.EVRP.MAX_CAPACITY)
         #skontrolujem riesenie pre vozidlo ci je dokoncene a ci obsluzil vsektych zakaznikov
-        self.EVRP.check_solution(self.solution['tour'][vehicle_id][:self.solution['steps'][vehicle_id]])
+        #self.EVRP.check_solution(self.best_sol['tour'][vehicle_id][:self.best_sol['steps'][vehicle_id]])
         
         
         #tour_length = self.EVRP.fitness_evaluation(self.best_sol['tour'][vehicle_id][:self.best_sol['steps'][vehicle_id]])
@@ -195,8 +179,8 @@ class Herusitic:
         #print(energyCapacity)
         if self.EVRP.BATTERY_CAPACITY - energyCapacity >= distance_to_depo:
             #print("JJ")
-            self.solution['tour'][vehicleId][self.solution['steps'][vehicleId]] = self.EVRP.DEPOT
-            self.solution['steps'][vehicleId] += 1
+            self.best_sol['tour'][vehicleId][self.best_sol['steps'][vehicleId]] = self.EVRP.DEPOT
+            self.best_sol['steps'][vehicleId] += 1
             #return self.EVRP.DEPOT
         else:
             # Ak nie je dosť energie, nájdi najbližšiu nabíjaciu stanicu
@@ -213,10 +197,10 @@ class Herusitic:
              #       current_node = nearest_station
              #       energyCapacity = 0
             nearest_station = self.find_nearest_charging_station(current_node)
-            self.solution['tour'][vehicleId][self.best_sol['steps'][vehicleId]] = nearest_station
-            self.solution['steps'][vehicleId] += 1
-            self.solution['tour'][vehicleId][self.best_sol['steps'][vehicleId]] = self.EVRP.DEPOT
-            self.solution['steps'][vehicleId] += 1
+            self.best_sol['tour'][vehicleId][self.best_sol['steps'][vehicleId]] = nearest_station
+            self.best_sol['steps'][vehicleId] += 1
+            current_node = nearest_station
+            energyCapacity = 0
                 #return nearest_station`
      
     

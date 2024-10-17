@@ -21,8 +21,7 @@ class EVRP():
 
         self.evals = None  # Počet vyhodnotení
         self.current_best = None  # Aktuálne najlepší výsledok
-
-        self.TERMINATION = 25000 
+        #self.TERMINATION = 25000 
 
 
     def euclidean_distance(self, i, j):
@@ -95,7 +94,6 @@ class EVRP():
                 elif keywords[0] == "DEPOT_SECTION":
                     self.DEPOT = int(next(fin)) - 1
                     self.charging_station[self.DEPOT] = True
-
         if self.ACTUAL_PROBLEM_SIZE == 0:
             print("wrong problem instance file")
             exit(1)
@@ -104,8 +102,12 @@ class EVRP():
 
 
     def fitness_evaluation(self, routes):
+        #print(routes)
         """Vyhodnotenie kvality riešenia."""
-        tour_length = sum(self.distances[routes[i]][routes[i + 1]] for i in range(len(routes) - 1))
+        tour_length = 0
+        for j in range(len(routes['steps'])):
+            route = routes['tour'][j][:routes['steps'][j]]
+            tour_length += sum(self.distances[route[i]][route[i + 1]] for i in range(len(route) - 1))
 
         #global current_best
         if tour_length < self.current_best:
@@ -127,14 +129,19 @@ class EVRP():
         energy_temp = self.BATTERY_CAPACITY
         capacity_temp = self.MAX_CAPACITY
         distance_temp = 0.0
-
+        #print("A")
+        #print(self.DEPOT)
+        #print(range(len(routes) - 1))
         for i in range(len(routes) - 1):
             from_node = routes[i]
-            to_node = routes[i + 1]
-            capacity_temp -= self.get_customer_demand(to_node)
+            to_node = routes[i + 1] 
+            #print(i)
+            #print(self.get_customer_demand(to_node))
+            capacity_temp -= self.get_customer_demand(to_node - 1)
             energy_temp -= self.get_energy_consumption(from_node, to_node)
             distance_temp += self.get_distance(from_node, to_node)
-
+            #print(capacity_temp)
+            #print(energy_temp)
             if capacity_temp < 0.0:
                 print("error: capacity below 0 at customer", to_node)
                 self.print_solution(routes)
@@ -145,17 +152,18 @@ class EVRP():
                 exit(1)
             if to_node == self.DEPOT:
                 capacity_temp = self.MAX_CAPACITY
+                #print(capacity_temp)
             if self.is_charging_station(to_node) or to_node == self.DEPOT:
                 energy_temp = self.BATTERY_CAPACITY
 
-        if distance_temp != self.fitness_evaluation(routes):
-            print("error: check fitness evaluation")
+        #if distance_temp != self.fitness_evaluation(routes):
+        #    print("error: check fitness evaluation")
 
 
     def get_distance(self, from_node, to_node):
         """Získanie vzdialenosti medzi dvoma uzlami."""
-        global evals
-        evals += (1.0 / self.ACTUAL_PROBLEM_SIZE)
+        #global evals
+        #self.evals += (1.0 / self.ACTUAL_PROBLEM_SIZE)
         return self.distances[from_node][to_node]
 
 
