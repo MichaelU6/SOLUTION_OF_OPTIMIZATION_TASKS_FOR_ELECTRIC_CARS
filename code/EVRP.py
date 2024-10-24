@@ -3,25 +3,24 @@ import math
 class EVRP():
     def __init__(self):
         self.problem_instance = None  # Názov inštancie
-        self.node_list = None  # Zoznam uzlov s id a súradnicami x a y
-        self.cust_demand = None  # Zoznam s id a požiadavkami zákazníkov
-        self.charging_station = None
-        self.distances = None  # Matica vzdialeností
-        self.problem_size = None  # Rozmer problému
-        self.energy_consumption = None
+        self.node_list = None  # Zoznam uzlov s id a súradnicami x a y. Depo + zakaznici + nabijacky
+        self.cust_demand = None  # Zoznam s id a požiadavkami zákazníkov. Depo + zakaznici + nabijacky
+        self.charging_station = None # Zoznam s bool hodnotou ci je alebo nieje nabijaci ten bod. Depo(true) + zakaznici(false) + nabijacky(true)
+        self.distances = None  # Matica vzdialeností. Zoznam [[], [], ...] . Hladanie napr vzidalenost bodu s indexom 0 od bodu s indexom 3 => self.distances[0][3]
+        self.problem_size = None  # Rozmer problému. Depo + zakaznici.
+        self.energy_consumption = None # Cislo kolko minie elektriny za jednotku vzdialenosti.
 
-        self.DEPOT = None  # ID depa (zvyčajne 0)
+        self.DEPOT = None  # ID depa (0)
         self.NUM_OF_CUSTOMERS = None  # Počet zákazníkov (bez depa)
         self.ACTUAL_PROBLEM_SIZE = None  # Celkový počet zákazníkov, dobíjacích staníc a depa
-        self.OPTIMUM = None
-        self.NUM_OF_STATIONS = None
+        self.OPTIMUM = None # Asi zatial najlepsi vysledok z dat
+        self.NUM_OF_STATIONS = None # Pocet nabijaciek
         self.BATTERY_CAPACITY = None  # Maximálna energia vozidiel
         self.MAX_CAPACITY = None  # Kapacita vozidiel
-        self.MIN_VEHICLES = None
+        self.MIN_VEHICLES = None # Pocet vozidiel
 
         self.evals = None  # Počet vyhodnotení
         self.current_best = None  # Aktuálne najlepší výsledok
-        #self.TERMINATION = 25000 
 
 
     def euclidean_distance(self, i, j):
@@ -102,13 +101,15 @@ class EVRP():
 
 
     def fitness_evaluation(self, routes):
-        #print(routes)
         """Vyhodnotenie kvality riešenia."""
         tour_length = 0
+        """
         for j in range(len(routes['steps'])):
             route = routes['tour'][j][:routes['steps'][j]]
             tour_length += sum(self.distances[route[i]][route[i + 1]] for i in range(len(route) - 1))
-
+        """
+        for node in range(len(routes)-1):
+            tour_length += self.distances[routes[node]][routes[node + 1]]
         #global current_best
         if tour_length < self.current_best:
             self.current_best = tour_length
@@ -125,23 +126,17 @@ class EVRP():
 
 
     def check_solution(self, routes):
+        #print("check: ", routes)
         """Overenie platnosti riešenia."""
         energy_temp = self.BATTERY_CAPACITY
         capacity_temp = self.MAX_CAPACITY
         distance_temp = 0.0
-        #print("A")
-        #print(self.DEPOT)
-        #print(range(len(routes) - 1))
         for i in range(len(routes) - 1):
             from_node = routes[i]
-            to_node = routes[i + 1] 
-            #print(i)
-            #print(self.get_customer_demand(to_node))
-            capacity_temp -= self.get_customer_demand(to_node - 1)
+            to_node = routes[i + 1]
+            capacity_temp -= self.get_customer_demand(to_node)
             energy_temp -= self.get_energy_consumption(from_node, to_node)
             distance_temp += self.get_distance(from_node, to_node)
-            #print(capacity_temp)
-            #print(energy_temp)
             if capacity_temp < 0.0:
                 print("error: capacity below 0 at customer", to_node)
                 self.print_solution(routes)
@@ -152,7 +147,6 @@ class EVRP():
                 exit(1)
             if to_node == self.DEPOT:
                 capacity_temp = self.MAX_CAPACITY
-                #print(capacity_temp)
             if self.is_charging_station(to_node) or to_node == self.DEPOT:
                 energy_temp = self.BATTERY_CAPACITY
 

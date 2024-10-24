@@ -35,19 +35,16 @@ def main():
     stats.open_stats()
     start_run(1, evrp)
     heuristic = Herusitic(evrp,4)
-    heuristic.initialize_heuristic()
+    heuristic.initialize()
     
     for run in range(1, stats.MAX_TRIALS + 1):
         # Krok 3
         heuristic.run_aco(stats)
-        
-        # Krok 4
-        #while not termination_condition(evrp):
-        #    heuristic.run_heuristic()
 
         # Krok 5
+        #print(heuristic.best_sol)
         end_run(run, evrp, stats, heuristic)
-    #print(heuristic.best_sol)
+
     # Krok 6
     stats.close_stats()
 
